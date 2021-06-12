@@ -22,6 +22,7 @@ export function TransactionsTable() {
             <tr key={transaction.id}>
               <td>{transaction.title}</td>
               <td className={transaction.type}>
+                {transaction.type === 'withdraw' && '-'}
                 {new Intl.NumberFormat('en-AU', {
                   style: 'currency',
                   currency: 'AUD'

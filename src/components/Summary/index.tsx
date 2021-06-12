@@ -9,7 +9,21 @@ import { Container } from "./styles";
 export function Summary() {
   const { transactions } = useContext(TransactionsContext);
 
-  console.log(transactions);
+  const summary = transactions.reduce((acc, transaction) => {
+    if (transaction.type === 'deposit') {
+      acc.deposits += transaction.amount;
+      acc.total += transaction.amount;
+    } else {
+      acc.withdraws += transaction.amount;
+      acc.total -= transaction.amount;
+    }
+
+    return acc;
+  }, {
+    deposits: 0,
+    withdraws: 0,
+    total: 0,
+  });
 
   return (
     <Container>
@@ -18,21 +32,37 @@ export function Summary() {
           <p>Income</p>
           <img src={incomeImage} alt="Income" />
         </header>
-        <strong>$1000.00</strong>
+        <strong className="deposit">
+          {new Intl.NumberFormat('en-AU', {
+            style: 'currency',
+            currency: 'AUD'
+          }).format(summary.deposits)}
+        </strong>
       </div>
       <div>
         <header>
           <p>Expenses</p>
           <img src={outcomeImage} alt="Expenses" />
         </header>
-        <strong>$1000.00</strong>
+        <strong className="withdraw">
+          -
+          {new Intl.NumberFormat('en-AU', {
+          style: 'currency',
+          currency: 'AUD'
+        }).format(summary.withdraws)}
+        </strong>
       </div>
       <div className="total">
         <header>
           <p>Total</p>
           <img src={totalImage} alt="Total" />
         </header>
-        <strong>$1000.00</strong>
+        <strong>
+          {new Intl.NumberFormat('en-AU', {
+            style: 'currency',
+            currency: 'AUD'
+          }).format(summary.total)}
+        </strong>
       </div>
     </Container>
   )
